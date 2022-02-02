@@ -85,7 +85,7 @@
    "UseFluentApiOnly": false,
    "UseHandleBars": true,
    "UseInflector": false,
-   "UseLegacyPluralizer": false,
+   "UseLegacyPluralizer": true,
    "UseManyToManyEntity": true,
    "UseNoConstructor": false,
    "UseNoDefaultConstructor": true,
