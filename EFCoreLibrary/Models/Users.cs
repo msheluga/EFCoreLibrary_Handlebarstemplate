@@ -13,29 +13,31 @@ namespace EFCoreLibrary.Models
         {
             UserFieldAccess = new HashSet<UserFieldAccess>();
             UserTableAccess = new HashSet<UserTableAccess>();
-            Group = new HashSet<Groups>();
+            UsersInGroup = new HashSet<UsersInGroup>();
         }
 
-        [Key]        
-        [Authorize(Policy="Id_policy")]
-        public Guid Id { get; set; }
-        [Required]        
-        [StringLength(255)]        
-        [Authorize(Policy="UserName_policy")]
-        public string UserName { get; set; }
-        [Column(TypeName = "datetime")]        
-        [Authorize(Policy="LastLogin_policy")]
-        public DateTime? LastLogin { get; set; }
-        [Column("status")]        
-        [Authorize(Policy="Status_policy")]
-        public int? Status { get; set; }
+        [Key]
+        [Authorize(Policy="Users.Id_policy")]
+            public Guid Id { get; set; }
+        [Required]
+        [StringLength(255)]
+        [Authorize(Policy="Users.UserName_policy")]
+            public string UserName { get; set; }
+        [Column(TypeName = "datetime")]
+        [Authorize(Policy="Users.LastLogin_policy")]
+            public DateTime? LastLogin { get; set; }
+        [Column("status")]
+        [Authorize(Policy="Users.Status_policy")]
+            public int? Status { get; set; }
 
-        [InverseProperty("User")]
-        public virtual ICollection<UserFieldAccess> UserFieldAccess { get; set; }
-        [InverseProperty("User")]
-        public virtual ICollection<UserTableAccess> UserTableAccess { get; set; }
-        [ForeignKey(nameof(UserId))]
-        [InverseProperty(nameof(Groups.User))]
-        public virtual ICollection<Groups> Group { get; set; }
+    [InverseProperty("User")]
+        public virtual ICollection<UserFieldAccess>
+    UserFieldAccess { get; set; }
+    [InverseProperty("User")]
+        public virtual ICollection<UserTableAccess>
+    UserTableAccess { get; set; }
+    [InverseProperty("User")]
+        public virtual ICollection<UsersInGroup>
+    UsersInGroup { get; set; }
     }
 }

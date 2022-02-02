@@ -14,21 +14,22 @@ namespace EFCoreLibrary.Models
             Book = new HashSet<Book>();
         }
 
-        [Key]        
-        [Authorize(Policy="Id_policy")]
-        public Guid Id { get; set; }
-        [Required]        
-        [StringLength(50)]        
-        [Authorize(Policy="Name_policy")]
-        public string Name { get; set; }
-        [Required]        
-        [StringLength(150)]        
-        [Authorize(Policy="Email_policy")]
-        public string Email { get; set; }
-        [Authorize(Policy="Category_policy")]
-        public int Category { get; set; }
+        [Key]
+        [Authorize(Policy="Press.Id_policy")]
+            public Guid Id { get; set; }
+        [Required]
+        [StringLength(50)]
+        [Authorize(Policy="Press.Name_policy")]
+            public string Name { get; set; }
+        [Required]
+        [StringLength(150)]
+        [Authorize(Policy="Press.Email_policy")]
+            public string Email { get; set; }
+        [Authorize(Policy="Press.Category_policy")]
+            public int Category { get; set; }
 
-        [InverseProperty("Press")]
-        public virtual ICollection<Book> Book { get; set; }
+    [InverseProperty("Press")]
+        public virtual ICollection<Book>
+    Book { get; set; }
     }
 }

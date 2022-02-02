@@ -10,6 +10,7 @@ namespace EFCoreLibrary.Data
     {
         public virtual DbSet<Address> Address { get; set; }
         public virtual DbSet<Book> Book { get; set; }
+        public virtual DbSet<BooksInGroups> BooksInGroups { get; set; }
         public virtual DbSet<DeviceCodes> DeviceCodes { get; set; }
         public virtual DbSet<Fields> Fields { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
@@ -22,6 +23,7 @@ namespace EFCoreLibrary.Data
         public virtual DbSet<UserFieldAccess> UserFieldAccess { get; set; }
         public virtual DbSet<UserTableAccess> UserTableAccess { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UsersInGroup> UsersInGroup { get; set; }
 
         public BooksContext(DbContextOptions<BooksContext> options) : base(options)
         {
@@ -49,19 +51,23 @@ namespace EFCoreLibrary.Data
                     .HasForeignKey(d => d.PressId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Book_Press");
+            });
 
-                entity.HasMany(d => d.Group)
-                    .WithMany(p => p.Book)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "BooksInGroups",
-                        l => l.HasOne<Groups>().WithMany().HasForeignKey("GroupId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_BooksInGroups_Groups"),
-                        r => r.HasOne<Book>().WithMany().HasForeignKey("BookId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_BooksInGroups_Book"),
-                        j =>
-                        {
-                            j.HasKey("BookId", "GroupId");
+            modelBuilder.Entity<BooksInGroups>(entity =>
+            {
+                entity.HasKey(e => new { e.BookId, e.GroupId });
 
-                            j.ToTable("BooksInGroups");
-                        });
+                entity.HasOne(d => d.Book)
+                    .WithMany(p => p.BooksInGroups)
+                    .HasForeignKey(d => d.BookId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BooksInGroups_Book");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.BooksInGroups)
+                    .HasForeignKey(d => d.GroupId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BooksInGroups_Groups");
             });
 
             modelBuilder.Entity<Fields>(entity =>
@@ -137,19 +143,23 @@ namespace EFCoreLibrary.Data
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+            });
 
-                entity.HasMany(d => d.Group)
-                    .WithMany(p => p.User)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "UsersInGroup",
-                        l => l.HasOne<Groups>().WithMany().HasForeignKey("GroupId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_UsersInGroup_Groups"),
-                        r => r.HasOne<Users>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_UsersInGroup_Users"),
-                        j =>
-                        {
-                            j.HasKey("UserId", "GroupId");
+            modelBuilder.Entity<UsersInGroup>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.GroupId });
 
-                            j.ToTable("UsersInGroup");
-                        });
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.UsersInGroup)
+                    .HasForeignKey(d => d.GroupId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UsersInGroup_Groups");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UsersInGroup)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UsersInGroup_Users");
             });
 
             OnModelCreatingPartial(modelBuilder);

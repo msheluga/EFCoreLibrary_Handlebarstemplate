@@ -9,21 +9,21 @@ namespace EFCoreLibrary.Models
 {
     public partial class UserFieldAccess
     {
-        [Key]        
-        [Authorize(Policy="Id_policy")]
-        public Guid Id { get; set; }
-        [Authorize(Policy="UserId_policy")]
-        public Guid UserId { get; set; }
-        [Authorize(Policy="FieldId_policy")]
-        public Guid FieldId { get; set; }
-        [Authorize(Policy="FieldLevelAccess_policy")]
-        public int FieldLevelAccess { get; set; }
+        [Key]
+        [Authorize(Policy="UserFieldAccess.Id_policy")]
+            public Guid Id { get; set; }
+        [Authorize(Policy="UserFieldAccess.UserId_policy")]
+            public Guid UserId { get; set; }
+        [Authorize(Policy="UserFieldAccess.FieldId_policy")]
+            public Guid FieldId { get; set; }
+        [Authorize(Policy="UserFieldAccess.FieldLevelAccess_policy")]
+            public int FieldLevelAccess { get; set; }
 
-        [ForeignKey(nameof(FieldId))]
-        [InverseProperty(nameof(Fields.UserFieldAccess))]
-        public virtual Fields Field { get; set; }
-        [ForeignKey(nameof(UserId))]
-        [InverseProperty(nameof(Users.UserFieldAccess))]
-        public virtual Users User { get; set; }
+    [ForeignKey(nameof(FieldId))]
+    [InverseProperty(nameof(Fields.UserFieldAccess))]
+    public virtual Fields Field { get; set; }
+    [ForeignKey(nameof(UserId))]
+    [InverseProperty(nameof(Users.UserFieldAccess))]
+    public virtual Users User { get; set; }
     }
 }
